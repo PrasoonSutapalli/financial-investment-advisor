@@ -121,34 +121,38 @@ goal(swati, growth).
 
 steady_income(U) :- income(U, I), I > 1200000.
 
-adequate_savings(U) :- savings(U, S), dependents(U, D), S >= 5000*D.
+adequate_savings(U) :- 
+    savings(U, S), 
+    dependents(U, D), 
+    S >= 5000*D.
 
-
-
-recommend(U, (stocks, '23bcs139')) :-
+recommend(U, stocks) :-
     steady_income(U),
     adequate_savings(U),
     risk(U, high),
     goal(U, growth).
 
-recommend(U, (bonds, '23bcs139')) :-
+recommend(U, bonds) :-
     risk(U, medium),
     goal(U, preservation).
 
-recommend(U, (savings_account, '23bcs139')) :- risk(U, low).
-recommend(U, (savings_account, '23bcs139')) :- \+ adequate_savings(U).
+recommend(U, savings_account) :- 
+    risk(U, low).
+
+recommend(U, savings_account) :- 
+    \+ adequate_savings(U).
 
 moderate_savings(U) :-
     savings(U, S),
     S > 50000,
     S < 200000.
 
-recommend(U, (balanced_portfolio, '23bcs139')) :-
+recommend(U, balanced_portfolio) :-
     moderate_savings(U),
     risk(U, medium),
     goal(U, growth).
 
-recommend(U, (liquid_assets, '23bcs139')) :-
+recommend(U, liquid_assets) :-
     goal(U, liquidity).
 
 % ----------------------------
@@ -158,23 +162,17 @@ recommend(U, (liquid_assets, '23bcs139')) :-
 no_risky_investment(U) :- income(U, I), I =< 400000.
 no_risky_investment(U) :- \+ adequate_savings(U).
 
-explain(U, Reason) :-
-    recommend(U, (stocks, '23bcs139')),
-    Reason = 'Invest in stocks for high risk, high savings, and steady income (23bcs139)'.
+explain(U, 'Invest in stocks for high risk, high savings, and steady income.') :-
+    recommend(U, stocks).
 
-explain(U, Reason) :-
-    recommend(U, (bonds, '23bcs139')),
-    Reason = 'Invest in bonds for medium risk and preservation goals (23bcs139)'.
+explain(U, 'Invest in bonds for medium risk and preservation goals.') :-
+    recommend(U, bonds).
 
-explain(U, Reason) :-
-    recommend(U, (savings_account, '23bcs139')),
-    Reason = 'Use savings account for low risk or insufficient savings (23bcs139)'.
+explain(U, 'Use savings account for low risk or insufficient savings.') :-
+    recommend(U, savings_account).
 
-explain(U, Reason) :-
-    recommend(U, (balanced_portfolio, '23bcs139')),
-    Reason = 'Balanced portfolio for medium risk, growth, and moderate savings (23bcs139)'.
+explain(U, 'Balanced portfolio for medium risk, growth, and moderate savings.') :-
+    recommend(U, balanced_portfolio).
 
-explain(U, Reason) :-
-    recommend(U, (liquid_assets, '23bcs139')),
-    Reason = 'Hold liquid assets for liquidity goal (23bcs139)'.
-
+explain(U, 'Hold liquid assets for liquidity goal.') :-
+    recommend(U, liquid_assets).
